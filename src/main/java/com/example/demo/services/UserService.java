@@ -1,0 +1,59 @@
+package com.example.demo.services;
+
+import org.springframework.stereotype.Service;
+
+import com.example.demo.models.User;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.requests.UserCreationRequest;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@Service
+public class UserService {
+
+    private static final Logger logger= LoggerFactory.getLogger(UserService.class);
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository){
+        this.userRepository= userRepository;
+    }
+    public User createUser(UserCreationRequest userCreationRequest){
+        return userRepository.save(mapToUser(userCreationRequest));
+    }
+    public void removeUser(Long id){
+        userRepository.deleteById(id);
+    }
+    public Optional<User> getUser(final Long id){
+        try {
+            return userRepository.findById(id);
+        } catch (Exception e) {
+            logger.error("Error al recuperar el usuario con id {}. Exception: {}", id, e);
+            return null;
+        }
+        
+    }
+    public List<User> getAllUser(){
+        try{
+            return userRepository.findAll();
+        } catch( Exception e){
+            logger.error("Error listando los Usuarios {}", e);
+            return new ArrayList<>();
+        }
+    }
+
+
+
+    public User mapToUser(UserCreationRequest userCreationRequest){
+        User user= new User();
+        user.setNombre(userCreationRequest.nombre());
+        user.setContrasena(userCreationRequest.contrasena());
+        user.setEdad(userCreationRequest.edad());
+        user.setAdminstrador(userCreationRequest.administrador());
+        return user;
+    }
+}
