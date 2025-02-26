@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 public class Pedido {
 
     @Id
+    @Column(name="numeroPedido")
     private long numeroPedido;
 
     @Column(name="descripcion")

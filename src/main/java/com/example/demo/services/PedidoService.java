@@ -22,7 +22,7 @@ public class PedidoService {
         this.pedidoRepository= pedidoRepository;
     }
 
-    public Pedido creatPedido(PedidoCreationRequest pedidoCreationRequest){
+    public Pedido createPedido(PedidoCreationRequest pedidoCreationRequest){
         return pedidoRepository.save(mapToPedido(pedidoCreationRequest));
     }
     public void removePedido(Long numeroPedido){

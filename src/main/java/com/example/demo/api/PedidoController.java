@@ -22,7 +22,7 @@ public class PedidoController {
 
     @PostMapping
     public Pedido createPedido(@RequestBody PedidoCreationRequest pedidoCreationRequest){
-        return pedidoService.creatPedido(pedidoCreationRequest);
+        return pedidoService.createPedido(pedidoCreationRequest);
     }
     @GetMapping("/{numeroPedido}")
     public Pedido getPedido(@PathVariable long numeroPedido){
