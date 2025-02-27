@@ -23,10 +23,22 @@ public class ProductService {
         this.productRepository=productRepository;
     }
     public Product createProduct(ProductCreationRequest productCreationRequest){
+        try {
             return productRepository.save(mapToProduct(productCreationRequest));
+        } catch (Exception e) {
+            logger.error("Error al crear el producto. Excepcion: {}", e);
+            return null;
+        }
+
+            
     }
     public void removeProduct(Long id){
-        productRepository.deleteById(id);
+        try {
+            productRepository.deleteById(id);
+        } catch (Exception e) {
+            logger.error("Error al borrar el producto con id {}. Excepcion: {}", id, e);
+        }
+        
     }
     public Optional<Product> getProducto(final Long id){
         try {

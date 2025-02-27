@@ -23,10 +23,21 @@ public class UserService {
         this.userRepository= userRepository;
     }
     public User createUser(UserCreationRequest userCreationRequest){
-        return userRepository.save(mapToUser(userCreationRequest));
+        try {
+            return userRepository.save(mapToUser(userCreationRequest));
+        } catch (Exception e) {
+            logger.error("Error al crear el Usuario. Exception: {}", e);
+            return null;
+        }
+        
     }
     public void removeUser(Long id){
-        userRepository.deleteById(id);
+        try {
+            userRepository.deleteById(id);
+        } catch (Exception e) {
+            logger.error("Error al borrar el usuario con id {}. Exception: {}", id, e);
+        }
+        
     }
     public Optional<User> getUser(final Long id){
         try {
@@ -45,6 +56,7 @@ public class UserService {
             return new ArrayList<>();
         }
     }
+
 
 
 

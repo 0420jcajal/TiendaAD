@@ -23,9 +23,20 @@ public class PedidoService {
     }
 
     public Pedido createPedido(PedidoCreationRequest pedidoCreationRequest){
-        return pedidoRepository.save(mapToPedido(pedidoCreationRequest));
+        try {
+            return pedidoRepository.save(mapToPedido(pedidoCreationRequest));
+        } catch (Exception e) {
+            logger.error("Error al crear el Pedido. Excepcion: {}", e);
+            return null; 
+        }
+        
     }
     public void removePedido(Long numeroPedido){
+        try {
+            pedidoRepository.deleteById(numeroPedido);
+        } catch (Exception e) {
+            logger.error("Error al borrar el pedido con numero {}. Excepcion: {}",numeroPedido, e); 
+        }
         pedidoRepository.deleteById(numeroPedido);
     }
     public Optional<Pedido> getPedido(final Long numeroPedido){
