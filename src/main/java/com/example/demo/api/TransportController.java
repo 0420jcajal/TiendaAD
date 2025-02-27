@@ -37,12 +37,11 @@ public class TransportController {
     @PostMapping
     public Transport createTrasport(@RequestBody Transport transport){
         try {
-            return transportRepository.save(transport)
+            return transportRepository.save(transport);
         } catch (Exception e) {
             logger.error("Error al crear el transporte. Excepcion: {}", e);
             return null; 
         }
-        return transportRepository.save(transport);
     }
 
 }
