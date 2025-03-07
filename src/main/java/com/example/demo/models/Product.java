@@ -1,4 +1,6 @@
 package com.example.demo.models;
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -19,6 +21,10 @@ public class Product {
     private int stock;
     @Column(name="precio")
     private float precio;
+
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL)
+    private List<Pedido_Producto> pedidoProductos;
+    
     public Product() {
     }
     public long getId() {
@@ -100,6 +106,12 @@ public class Product {
         if (Float.floatToIntBits(precio) != Float.floatToIntBits(other.precio))
             return false;
         return true;
+    }
+    public List<Pedido_Producto> getPedidoProductos() {
+        return pedidoProductos;
+    }
+    public void setPedidoProductos(List<Pedido_Producto> pedidoProductos) {
+        this.pedidoProductos = pedidoProductos;
     }
 
 }

@@ -8,8 +8,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.models.Pedido;
+import com.example.demo.models.Pedido_Producto;
+import com.example.demo.models.Product;
+import com.example.demo.models.User;
 import com.example.demo.repository.PedidoRepository;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.ProductRepository;
 import com.example.demo.requests.PedidoCreationRequest;
+
+import jakarta.transaction.Transactional;
+
 
 @Service
 public class PedidoService {
@@ -17,17 +25,49 @@ public class PedidoService {
     private static final Logger logger= LoggerFactory.getLogger(PedidoService.class);
 
     private final PedidoRepository pedidoRepository;
+    private final UserRepository userRepository;
+    private final ProductRepository productRepository;
 
-    public PedidoService(PedidoRepository pedidoRepository){
+    public PedidoService(PedidoRepository pedidoRepository, UserRepository userRepository, ProductRepository productRepository){
         this.pedidoRepository= pedidoRepository;
+        this.userRepository= userRepository;
+        this.productRepository= productRepository;
     }
 
+    @Transactional
     public Pedido createPedido(PedidoCreationRequest pedidoCreationRequest){
         try {
-            return pedidoRepository.save(mapToPedido(pedidoCreationRequest));
+            Pedido pedido= mapToPedido(pedidoCreationRequest);
+            User user = userRepository.findById(pedidoCreationRequest.userId())
+                    .orElseThrow(() -> {
+                        RuntimeException exception = new RuntimeException("Usuario no encontrado");
+                        logger.error("Error al encontrar el usuario con ID {}. Excepcion: {}", pedidoCreationRequest.userId(), exception.getMessage(), exception);
+                        return exception;
+                    });
+            
+            pedido.setUser(user);
+
+            List<Pedido_Producto> pedidoProductos= pedidoCreationRequest.productos().stream().map(ProductoCantidad -> {
+                Product producto = productRepository.findById(ProductoCantidad.productoId())
+                    .orElseThrow(() -> {
+                        RuntimeException exception = new RuntimeException("Producto no encontrado");
+                        logger.error("Error al encontrar el producto con ID {}. Excepcion: {}", ProductoCantidad.productoId(), exception.getMessage(), exception);
+                        return exception;
+                    });
+                Pedido_Producto pedidoProducto= new Pedido_Producto();
+                pedidoProducto.setPedido(pedido);
+                pedidoProducto.setProducto(producto);
+                pedidoProducto.setCantidad(ProductoCantidad.cantidad());
+                return pedidoProducto;
+            }).toList();
+
+            pedido.setPedidoProductos(pedidoProductos);
+            pedido.setPrecio(pedido.calcularPrecioTotal());
+
+            return pedidoRepository.save(pedido);
         } catch (Exception e) {
             logger.error("Error al crear el Pedido. Excepcion: {}", e);
-            return null; 
+            throw e; 
         }
         
     }

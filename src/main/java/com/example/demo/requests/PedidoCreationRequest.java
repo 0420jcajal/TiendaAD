@@ -1,5 +1,10 @@
 package com.example.demo.requests;
 
-public record PedidoCreationRequest (long numeroPedido, String descripcion, float precio, String estado, String comprador){
+import java.util.List;
 
+
+public record PedidoCreationRequest (long numeroPedido, String descripcion, float precio, String estado, String comprador,Long userId, List<ProductoCantidad> productos) {
+    
+    public static record ProductoCantidad(Long productoId, int cantidad) {
+    }
 }

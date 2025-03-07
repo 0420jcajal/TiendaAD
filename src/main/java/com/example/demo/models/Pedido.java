@@ -1,4 +1,6 @@
 package com.example.demo.models;
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -17,6 +19,29 @@ public class Pedido {
     private String estado;
     @Column(name="comprador")
     private String comprador;
+
+    @ManyToOne
+    @JoinColumn(name="userId")
+    private User user;
+
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    private List<Pedido_Producto> pedidoProductos;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Pedido_Producto> getPedidoProductos() {
+        return pedidoProductos;
+    }
+
+    public void setPedidoProductos(List<Pedido_Producto> pedidoProductos) {
+        this.pedidoProductos = pedidoProductos;
+    }
 
     public Pedido() {
     }
@@ -104,5 +129,12 @@ public class Pedido {
         return true;
     }
 
+    public float calcularPrecioTotal() {
+        float total = 0;
+        for (Pedido_Producto pp : pedidoProductos) {
+            total += pp.getProducto().getPrecio() * pp.getCantidad();
+        }
+        return total;
+    }
     
 }

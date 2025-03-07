@@ -1,4 +1,6 @@
 package com.example.demo.models;
+import java.util.List;
+
 import jakarta.persistence.*;
 
 
@@ -19,6 +21,10 @@ public class User {
     private int edad;
     @Column(name="administrador")
     private boolean adminstrador;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Pedido> pedidos;
+    
     public User(long id, String nombre, String contrasena, int edad, boolean adminstrador) {
         this.id = id;
         this.nombre = nombre;
