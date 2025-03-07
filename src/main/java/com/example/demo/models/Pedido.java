@@ -2,6 +2,7 @@ package com.example.demo.models;
 import java.util.List;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="pedido")
@@ -25,6 +26,7 @@ public class Pedido {
     private User user;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Pedido_Producto> pedidoProductos;
 
     public User getUser() {

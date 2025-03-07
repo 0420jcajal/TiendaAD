@@ -1,5 +1,7 @@
 package com.example.demo.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -11,10 +13,12 @@ public class Pedido_Producto {
 
     @ManyToOne
     @JoinColumn(name = "numero_pedido")
+    @JsonBackReference
     private Pedido pedido;
 
     @ManyToOne
     @JoinColumn(name = "producto_id")
+    @JsonBackReference
     private Product producto;
 
     @Column(name = "cantidad")
