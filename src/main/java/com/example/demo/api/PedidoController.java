@@ -36,4 +36,9 @@ public class PedidoController {
     public List<Pedido> getAllPedidos(){
         return pedidoService.getAllPedidos();
     }
+
+    @PatchMapping("/{numeroPedido}")
+    public Pedido updatePedido(@PathVariable long numeroPedido, @RequestBody Pedido pedido){
+        return pedidoService.updatePedido(numeroPedido, pedido);
+    }
 }

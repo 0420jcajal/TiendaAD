@@ -39,4 +39,9 @@ public class UserController {
     public List<User> getAllUser() {
         return userService.getAllUser();
     }
+
+    @PatchMapping("/{id}")
+    public User updateUser(@PathVariable long id, @RequestBody User user){
+        return userService.updateUser(id, user);
+    }
 }

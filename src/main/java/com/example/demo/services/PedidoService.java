@@ -96,6 +96,25 @@ public class PedidoService {
         }
 
     }
+
+    public Pedido updatePedido(Long numeroPedido, Pedido infoActualizar){
+        try {
+            Pedido pedido= pedidoRepository.findById(numeroPedido)
+                    .orElseThrow(() -> {
+                        RuntimeException exception = new RuntimeException("Pedido no encontrado");
+                        logger.error("Error al encontrar el pedido con numero {}. Excepcion: {}", numeroPedido, exception.getMessage(), exception);
+                        return exception;
+                    });
+            pedido.setDescripcion(infoActualizar.getDescripcion());
+            pedido.setPrecio(infoActualizar.getPrecio());
+            pedido.setEstado(infoActualizar.getEstado());
+            pedido.setComprador(infoActualizar.getComprador());
+            return pedidoRepository.save(pedido);
+        } catch (Exception e) {
+            logger.error("Error al actualizar el pedido con numero {}. Excepcion: {}", numeroPedido, e);
+            return null;
+        }
+    }
     
 
     public Pedido mapToPedido(PedidoCreationRequest pedidoCreationRequest){

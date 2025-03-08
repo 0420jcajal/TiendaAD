@@ -57,6 +57,25 @@ public class UserService {
         }
     }
 
+    public User updateUser(Long id, User infoActualizar){
+        try {
+            User user= userRepository.findById(id)
+                    .orElseThrow(() -> {
+                        RuntimeException exception = new RuntimeException("Usuario no encontrado");
+                        logger.error("Error al encontrar el usuario con ID {}. Excepcion: {}", id, exception.getMessage(), exception);
+                        return exception;
+                    });
+            user.setNombre(infoActualizar.getNombre());
+            user.setContrasena(infoActualizar.getContrasena());
+            user.setEdad(infoActualizar.getEdad());
+            user.setAdminstrador(infoActualizar.isAdminstrador());
+            return userRepository.save(user);
+        } catch (Exception e) {
+            logger.error("Error al actualizar el usuario con id {}. Exception: {}", id, e);
+            return null;
+        }
+    }
+
 
 
 

@@ -58,6 +58,26 @@ public class ProductService {
         }
         
     }
+    public Product updateProduct(Long id, Product infoActualizar){
+        try {
+            Product product= productRepository.findById(id)
+                    .orElseThrow(() -> {
+                        RuntimeException exception = new RuntimeException("Producto no encontrado");
+                        logger.error("Error al encontrar el producto con ID {}. Excepcion: {}", id, exception.getMessage(), exception);
+                        return exception;
+                    });
+            product.setNombre(infoActualizar.getNombre());
+            product.setDescripcion(infoActualizar.getDescripcion());
+            product.setImagenPath(infoActualizar.getImagenPath());
+            product.setStock(infoActualizar.getStock());
+            product.setPrecio(infoActualizar.getPrecio());
+            return productRepository.save(product);
+        } catch (Exception e) {
+            logger.error("Error al actualizar el producto con id {}. Excepcion: {}", id, e);
+            return null;
+        }
+        
+    }
 
 
     public Product mapToProduct(ProductCreationRequest productCreationRequest){
